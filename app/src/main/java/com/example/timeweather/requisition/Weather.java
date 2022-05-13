@@ -45,20 +45,17 @@ public class Weather {
                     OkHttpClient cliente = new OkHttpClient();
 
                     Request request = new Request.Builder()
-                            .url("https://community-open-weather-map.p.rapidapi.com/weather?q=Natividade%2C%20BR&lat=0&lon=0&callback=&id=2172797&lang=pt&units=metric&mode=json")
+                            .url("https://community-open-weather-map.p.rapidapi.com/weather?q=Natividade%2Cbr&lat=-21.0422&lon=-41.9733&callback=&id=2172797&lang=pt&units=metric&mode=json")
                             .addHeader("X-RapidAPI-Host", "community-open-weather-map.p.rapidapi.com")
                             .addHeader("X-RapidAPI-Key", "a0c703d49dmsh22f075055d9c629p11c8d8jsnb7daa5c00934")
                             .build();
 
                     Response response = cliente.newCall(request).execute();
-                    while (!response.isSuccessful()){
-                        continue;
-                    }
                     ObjectMapper objectMapper = new ObjectMapper();
 
 
                     objeto = objectMapper.readValue(response.body().string(), CurrentWeather.class);
-                    Log.i("Testes", "getWeather: " + objeto.getMain().getTemp());
+                    Log.i("Testes", "temperatura recebida: " + objeto.getMain().getTemp() + "Maxima de: " + objeto.getMain().getTemp_max() + "minima de: " + objeto.getMain().getTemp_min());
 
 
                 }catch (JsonMappingException e){

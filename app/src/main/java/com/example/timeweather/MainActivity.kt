@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import com.example.timeweather.model.CurrentWeather
 import com.example.timeweather.requisition.Weather
+import java.text.DecimalFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -53,10 +54,12 @@ class MainActivity : AppCompatActivity() {
     private fun setWeather() {
         currentWeatherObject = tempoAtual.objeto
         val climaAtualText = currentWeatherObject.weather.get(0).description.toString()
-        val temperaturaAtualText = currentWeatherObject.main.temp.toInt().toString() + "Cº"
+        val decimalFormat = DecimalFormat("##.#")
+        val temperatura = decimalFormat.format(currentWeatherObject.main.temp)
+        val temperaturaAtualText = temperatura + "Cº"
         val localText = currentWeatherObject.name.toString()
-        val maxTempText = "Max " + currentWeatherObject.main.temp_max.toInt().toString() + "Cº"
-        val minTempText = "Min " + currentWeatherObject.main.temp_min.toInt().toString() + "Cº"
+        val maxTempText = "Max " + decimalFormat.format(currentWeatherObject.main.temp_max) + "Cº"
+        val minTempText = "Min " + decimalFormat.format(currentWeatherObject.main.temp_min) + "Cº"
 
         this.temperaturaAtual.text = temperaturaAtualText
         this.climaAtual.text = climaAtualText
