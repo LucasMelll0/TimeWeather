@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timeweather.model.CityCoordDAO
-import com.example.timeweather.model.CityDAO
+import com.example.timeweather.DAO.CityCoordDAO
+import com.example.timeweather.DAO.CityDAO
 import com.example.timeweather.model.CityCoord
 import com.example.timeweather.requisition.Weather
 import java.util.concurrent.ExecutorService

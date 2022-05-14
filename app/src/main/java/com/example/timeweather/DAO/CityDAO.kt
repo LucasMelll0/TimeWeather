@@ -1,4 +1,6 @@
-package com.example.timeweather.model
+package com.example.timeweather.DAO
+
+import com.example.timeweather.model.City
 
 class CityDAO {
 

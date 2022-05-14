@@ -2,8 +2,9 @@ package com.example.timeweather.requisition;
 
 import android.util.Log;
 
-import com.example.timeweather.model.CityCoordDAO;
-import com.example.timeweather.model.CityDAO;
+
+import com.example.timeweather.DAO.CityCoordDAO;
+import com.example.timeweather.DAO.CityDAO;
 import com.example.timeweather.model.City;
 import com.example.timeweather.model.CityCoord;
 import com.example.timeweather.model.CurrentWeather;
