@@ -13,7 +13,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.Executor;
 
 import okhttp3.OkHttpClient;
@@ -65,8 +67,13 @@ public class Weather {
                         float min_temp = objeto.getMain().getTemp_min();
                         float max_temp = objeto.getMain().getTemp_max();
 
-                        City city = new City(nome, clima, temperatura, min_temp, max_temp);
-                        Log.i("Testes", "cidade: " + city.getName());
+                        Calendar nowObject = Calendar.getInstance();
+
+                        String agora = getNow(nowObject);
+
+
+                        City city = new City(nome, agora, clima, temperatura, min_temp, max_temp);
+                        Log.i("Testes", "cidade: " + city.getNome());
                         preCityList.add(city);
 
                     }
@@ -86,6 +93,13 @@ public class Weather {
             }
         });
 
+    }
+
+    private String getNow(Calendar nowObject) {
+        long agora = nowObject.getTimeInMillis();
+        SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
+
+        return formater.format(agora);
     }
 
 }
