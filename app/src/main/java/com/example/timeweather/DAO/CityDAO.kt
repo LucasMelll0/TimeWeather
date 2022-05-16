@@ -20,4 +20,8 @@ class CityDAO {
     fun saveALl(all: java.util.ArrayList<City>) {
         cities.addAll(all)
     }
+
+    fun clear() {
+        cities.clear()
+    }
 }

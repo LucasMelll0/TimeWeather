@@ -1,41 +1,34 @@
 package com.example.timeweather
 
-import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenCreated
+import androidx.lifecycle.whenResumed
+import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timeweather.DAO.CityCoordDAO
 import com.example.timeweather.DAO.CityDAO
 import com.example.timeweather.model.City
-import com.example.timeweather.model.CityCoord
 import com.example.timeweather.requisition.Weather
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var cityList : ArrayList<City>
-
-
-
+    private lateinit var citiesList : ArrayList<City>
+    private lateinit var progressBar: ProgressBar
+    private lateinit var adapter: CityWeatherAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val city1 = CityCoord("-21.0422", "-41.9733")
-        val city2 = CityCoord("-21.205", "-41.8878")
-        val cityCoordDAO = CityCoordDAO()
-        cityCoordDAO.save(city1)
-        cityCoordDAO.save(city2)
-
-
-
-
-
-
+        progressBar = findViewById(R.id.progressbar_main)
 
 
     }
@@ -43,36 +36,45 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        runRequisition()
         settingUpRecyclerView()
-        hideProgressBar()
+        runRequisition()
 
     }
 
-    private fun hideProgressBar() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressbar_main)
-
-        progressBar.visibility = View.GONE
-
-    }
 
     private fun settingUpRecyclerView() {
-        val recyclerViewCity : RecyclerView = findViewById(R.id.recyclerview_cities)
+        adapter = CityWeatherAdapter(CityDAO.cities)
+        val recyclerViewCity: RecyclerView = findViewById(R.id.recyclerview_cities)
 
-        recyclerViewCity.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewCity.adapter = CityWeatherAdapter(cityList)
+        recyclerViewCity.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewCity.adapter = adapter
 
     }
 
     private fun runRequisition() {
-        val executor: ExecutorService = Executors.newSingleThreadExecutor()
-        val tempoAtual = Weather(executor)
-        tempoAtual.setCurrentWeather()
-        while (CityDAO.cities.size == 0) {
-            continue
+        lifecycleScope.launch {
+            whenStarted {
+                progressBar.visibility = View.VISIBLE
+
+                val loadingCities = withContext(Dispatchers.IO){
+                    val executor: ExecutorService = Executors.newSingleThreadExecutor()
+                    val tempoAtual = Weather(executor)
+                    tempoAtual.getCurrentWeather()
+                    while (!(Weather.getSuccess())){
+                        continue
+                    }
+                }
+
+            }
+            adapter.notifyDataSetChanged()
+             progressBar.visibility = View.GONE
+
+            Log.i("Testes", "runRequisition: foi antes")
+
+
         }
 
-       cityList = CityDAO.cities
 
     }
 
