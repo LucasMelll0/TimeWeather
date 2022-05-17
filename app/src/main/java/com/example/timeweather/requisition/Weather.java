@@ -10,13 +10,14 @@ import com.example.timeweather.DAO.CityDAO;
 import com.example.timeweather.model.City;
 import com.example.timeweather.model.CityCoord;
 import com.example.timeweather.model.CurrentWeather;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.example.timeweather.model.DayForecast;
+import com.example.timeweather.model.WeatherCityForecast;
+import com.example.timeweather.model.jsonClasses.ForecastClass;
+import com.example.timeweather.model.jsonClasses.WeatherForecastForJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -29,10 +30,8 @@ import okhttp3.Response;
 
 public class Weather {
     private Executor executor;
-
-
-
     static Boolean success = false;
+    private WeatherCityForecast forecast;
 
 
     public Weather(Executor executor) {
@@ -40,10 +39,6 @@ public class Weather {
     }
 
     public void getCurrentWeather() {
-
-        ArrayList<City> preCityList = new ArrayList<>();
-
-
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -94,7 +89,7 @@ public class Weather {
                                     String agora = getNow(nowObject);
 
 
-                                    City city = new City(nome, agora, clima, temperatura, min_temp, max_temp);
+                                    City city = new City(nome, agora, clima, temperatura, min_temp, max_temp, lat, lon);
                                     Log.i("Testes", "cidade: " + city.getNome());
                                     cityDAO.save(city);
                                 }
@@ -118,6 +113,80 @@ public class Weather {
                 }
             }
         });
+
+    }
+
+    public WeatherCityForecast getForecastFor5Days(City city){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    String lat = city.getLat();
+                    String lon = city.getLon();
+                    OkHttpClient client = new OkHttpClient();
+
+                    Request request = new Request.Builder()
+                            .url("https://community-open-weather-map.p.rapidapi.com/forecast?units=metric&mode=json&lat="+ lat +"&lon="+ lon +"&lang=pt")
+                            .get()
+                            .addHeader("X-RapidAPI-Host", "community-open-weather-map.p.rapidapi.com")
+                            .addHeader("X-RapidAPI-Key", "a0c703d49dmsh22f075055d9c629p11c8d8jsnb7daa5c00934")
+                            .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            if(response.code() == 200){
+                                ObjectMapper objectMapper = new ObjectMapper();
+
+                                ForecastClass objeto = objectMapper.readValue(response.body().string(), ForecastClass.class);
+
+                                DayForecast firstDay = new DayForecast(objeto.getList().get(0).getMain().getTemp(),
+                                        objeto.getList().get(0).getMain().getTemp_min(),
+                                        objeto.getList().get(0).getMain().getTemp_max(),
+                                        objeto.getList().get(0).getDt_txt());
+                                DayForecast secondDay = new DayForecast(objeto.getList().get(1).getMain().getTemp(),
+                                        objeto.getList().get(1).getMain().getTemp_min(),
+                                        objeto.getList().get(1).getMain().getTemp_max(),
+                                        objeto.getList().get(1).getDt_txt());
+                                DayForecast thirdDay = new DayForecast(objeto.getList().get(2).getMain().getTemp(),
+                                        objeto.getList().get(2).getMain().getTemp_min(),
+                                        objeto.getList().get(2).getMain().getTemp_max(),
+                                        objeto.getList().get(2).getDt_txt());
+                                DayForecast forthDay = new DayForecast(objeto.getList().get(3).getMain().getTemp(),
+                                        objeto.getList().get(3).getMain().getTemp_min(),
+                                        objeto.getList().get(3).getMain().getTemp_max(),
+                                        objeto.getList().get(3).getDt_txt());
+                                DayForecast fifthDay = new DayForecast(objeto.getList().get(4).getMain().getTemp(),
+                                        objeto.getList().get(4).getMain().getTemp_min(),
+                                        objeto.getList().get(4).getMain().getTemp_max(),
+                                        objeto.getList().get(4).getDt_txt());
+
+
+                                forecast = new WeatherCityForecast(city.getNome(), firstDay, secondDay, thirdDay, forthDay, fifthDay);
+
+
+
+
+                            }
+
+                        }
+                    });
+
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        return forecast;
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.timeweather
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,10 @@ class CityWeatherAdapter(private val cityList : ArrayList<City>) :
 
     override fun onBindViewHolder(holder: CityWeatherViewHolder, position: Int) {
         holder.populaAdapter(cityList[position])
+        holder.itemView.setOnClickListener( View.OnClickListener {
+            val intent = Intent(holder.itemView.context, ForecastWeather::class.java)
+            holder.itemView.context.startActivity(intent)
+        })
     }
 
     override fun getItemCount(): Int {
