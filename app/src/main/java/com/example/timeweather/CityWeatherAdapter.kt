@@ -42,7 +42,7 @@ class CityWeatherAdapter(private val cityList : ArrayList<City>) :
     override fun onBindViewHolder(holder: CityWeatherViewHolder, position: Int) {
         holder.populaAdapter(cityList[position])
         holder.itemView.setOnClickListener( View.OnClickListener {
-            val intent = Intent(holder.itemView.context, ForecastWeather::class.java)
+            val intent = Intent(holder.itemView.context, ForecastWeatherActivity::class.java)
             intent.putExtra("city", cityList.get(position))
             holder.itemView.context.startActivity(intent)
         })

@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 
-class ForecastWeather : AppCompatActivity() {
+class ForecastWeatherActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
     private lateinit var constraintLayout: ConstraintLayout
@@ -100,23 +100,23 @@ class ForecastWeather : AppCompatActivity() {
         val decimalFormat = DecimalFormat("##.#")
         city_name.text = forecastData.name
         now_temp.text = "${decimalFormat.format(forecastData.firstDay.temp)}Cº"
-        now_min_temp.text = "${decimalFormat.format(forecastData.firstDay.temp_min)}Cº"
-        now_max_temp.text = "${decimalFormat.format(forecastData.firstDay.temp_max)}Cº"
+        now_min_temp.text = "Min${decimalFormat.format(forecastData.firstDay.temp_min)}Cº"
+        now_max_temp.text = "Max${decimalFormat.format(forecastData.firstDay.temp_max)}Cº"
         one_day_temp.text = "${decimalFormat.format(forecastData.secondDay.temp)}Cº"
-        one_day_min_temp.text = "${decimalFormat.format(forecastData.secondDay.temp_min)}Cº"
-        one_day_max_temp.text = "${decimalFormat.format(forecastData.secondDay.temp_max)}Cº"
+        one_day_min_temp.text = "Min${decimalFormat.format(forecastData.secondDay.temp_min)}Cº"
+        one_day_max_temp.text = "Max${decimalFormat.format(forecastData.secondDay.temp_max)}Cº"
         two_day_temp.text = "${decimalFormat.format(forecastData.thirtDay.temp)}Cº"
-        two_day_min_temp.text = "${decimalFormat.format(forecastData.thirtDay.temp_min)}Cº"
-        two_day_max_temp.text = "${decimalFormat.format(forecastData.thirtDay.temp_max)}Cº"
+        two_day_min_temp.text = "Min${decimalFormat.format(forecastData.thirtDay.temp_min)}Cº"
+        two_day_max_temp.text = "Max${decimalFormat.format(forecastData.thirtDay.temp_max)}Cº"
         three_day_temp.text = "${decimalFormat.format(forecastData.forthDay.temp)}Cº"
-        three_day_min_temp.text = "${decimalFormat.format(forecastData.forthDay.temp_min)}Cº"
-        three_day_max_temp.text = "${decimalFormat.format(forecastData.forthDay.temp_max)}Cº"
+        three_day_min_temp.text = "Min${decimalFormat.format(forecastData.forthDay.temp_min)}Cº"
+        three_day_max_temp.text = "Max${decimalFormat.format(forecastData.forthDay.temp_max)}Cº"
         four_day_temp.text = "${decimalFormat.format(forecastData.fifthDay.temp)}Cº"
-        four_day_min_temp.text = "${decimalFormat.format(forecastData.fifthDay.temp_min)}Cº"
-        four_day_max_temp.text = "${decimalFormat.format(forecastData.fifthDay.temp_max)}Cº"
+        four_day_min_temp.text = "Min${decimalFormat.format(forecastData.fifthDay.temp_min)}Cº"
+        four_day_max_temp.text = "Max${decimalFormat.format(forecastData.fifthDay.temp_max)}Cº"
         five_day_temp.text = "${decimalFormat.format(forecastData.sixthDay.temp)}Cº"
-        five_day_min_temp.text = "${decimalFormat.format(forecastData.sixthDay.temp_min)}Cº"
-        five_day_max_temp.text = "${decimalFormat.format(forecastData.sixthDay.temp_max)}Cº"
+        five_day_min_temp.text = "Min${decimalFormat.format(forecastData.sixthDay.temp_min)}Cº"
+        five_day_max_temp.text = "Max${decimalFormat.format(forecastData.sixthDay.temp_max)}Cº"
 
 
 

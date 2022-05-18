@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">TimeWeather</string>
     <string name="previsao_para_hoje">Previsão para hoje</string>
-    <string name="previsao_para_amanha">previsão para amanhã</string>
-    <string name="previsao_para_2_dias">previsão para 2 dias</string>
-    <string name="previsao_para_3_dias">previsão para 3 dias</string>
-    <string name="previsao_para_4_dias">previsão para 4 dias</string>
+    <string name="previsao_para_amanha">Previsão para amanhã</string>
+    <string name="previsao_para_2_dias">Previsão para 2 dias</string>
+    <string name="previsao_para_3_dias">Previsão para 3 dias</string>
+    <string name="previsao_para_4_dias">Previsão para 4 dias</string>
+    <string name="previsao_para_5_dias">Previsão para 5 dias</string>
 </resources>
