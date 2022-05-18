@@ -1,5 +1,7 @@
 package com.example.timeweather.model
 
+import java.io.Serializable
+
 class City(
     val nome: String,
     val hora: String,
@@ -8,4 +10,4 @@ class City(
     val temp_min: Double,
     val temp_max: Double,
     val lat: String,
-    val lon : String)
+    val lon : String) : Serializable

@@ -8,4 +8,5 @@ class WeatherCityForecast(
     val secondDay: DayForecast,
     val thirtDay : DayForecast,
     val forthDay: DayForecast,
-    val fifthDay : DayForecast)
+    val fifthDay : DayForecast,
+    val sixthDay : DayForecast)

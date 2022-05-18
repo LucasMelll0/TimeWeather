@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.progressbar_main)
+        settingUpRecyclerView()
+        runRequisition()
 
 
     }
@@ -36,8 +38,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        settingUpRecyclerView()
-        runRequisition()
+
+
 
     }
 
@@ -58,19 +60,15 @@ class MainActivity : AppCompatActivity() {
                 progressBar.visibility = View.VISIBLE
 
                 val loadingCities = withContext(Dispatchers.IO){
-                    val executor: ExecutorService = Executors.newSingleThreadExecutor()
-                    val tempoAtual = Weather(executor)
-                    tempoAtual.getCurrentWeather()
-                    while (!(Weather.getSuccess())){
-                        continue
-                    }
-                }
 
+                    val tempoAtual = Weather()
+                    tempoAtual.getCurrentWeather()
+                }
             }
             adapter.notifyDataSetChanged()
              progressBar.visibility = View.GONE
 
-            Log.i("Testes", "runRequisition: foi antes")
+
 
 
         }

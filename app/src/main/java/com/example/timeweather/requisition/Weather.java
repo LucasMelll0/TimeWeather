@@ -29,19 +29,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Weather {
-    private Executor executor;
     static Boolean success = false;
     private WeatherCityForecast forecast;
 
 
-    public Weather(Executor executor) {
-        this.executor = executor;
+    public Weather() {
+
     }
 
     public void getCurrentWeather() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
                 try {
                     CityCoordDAO ccDAO = new CityCoordDAO();
                     CityDAO cityDAO = new CityDAO();
@@ -72,35 +68,37 @@ public class Weather {
                             @Override
                             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
-                                if(response.code() == 200){
-                                    ObjectMapper objectMapper = new ObjectMapper();
+
+                                    if (response.code() == 200){
+                                        ObjectMapper objectMapper = new ObjectMapper();
 
 
-                                    CurrentWeather objeto = objectMapper.readValue(response.body().string(), CurrentWeather.class);
-                                    Log.i("Testes", "Cidade: " + objeto.getMain() + "lat: " + objeto.getCoord().getLat() + "lon: " + objeto.getCoord().getLon());
-                                    String nome = objeto.getName();
-                                    String clima = objeto.getWeather().get(0).getDescription();
-                                    float temperatura = objeto.getMain().getTemp();
-                                    float min_temp = objeto.getMain().getTemp_min();
-                                    float max_temp = objeto.getMain().getTemp_max();
+                                        CurrentWeather objeto = objectMapper.readValue(response.body().string(), CurrentWeather.class);
+                                        Log.i("Testes", "Cidade: " + objeto.getMain() + "lat: " + objeto.getCoord().getLat() + "lon: " + objeto.getCoord().getLon());
+                                        String nome = objeto.getName();
+                                        String clima = objeto.getWeather().get(0).getDescription();
+                                        float temperatura = objeto.getMain().getTemp();
+                                        float min_temp = objeto.getMain().getTemp_min();
+                                        float max_temp = objeto.getMain().getTemp_max();
 
-                                    Calendar nowObject = Calendar.getInstance();
+                                        Calendar nowObject = Calendar.getInstance();
 
-                                    String agora = getNow(nowObject);
+                                        String agora = getNow(nowObject);
 
 
-                                    City city = new City(nome, agora, clima, temperatura, min_temp, max_temp, lat, lon);
-                                    Log.i("Testes", "cidade: " + city.getNome());
-                                    cityDAO.save(city);
-                                }
-                                countDownLatch.countDown();
+                                        City city = new City(nome, agora, clima, temperatura, min_temp, max_temp, lat, lon);
+                                        Log.i("Testes", "cidade: " + city.getNome());
+                                        cityDAO.save(city);
+                                    }
+                                    countDownLatch.countDown();
+
+
 
                             }
                         });
 
                         countDownLatch.await();
 
-                        Log.i("Testes", "getCurrentWeather:  foi antes da resposta");
 
 
                     }
@@ -111,15 +109,11 @@ public class Weather {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        });
 
-    }
+        }
+
 
     public WeatherCityForecast getForecastFor5Days(City city){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
                 try {
 
                     String lat = city.getLat();
@@ -133,6 +127,7 @@ public class Weather {
                             .addHeader("X-RapidAPI-Key", "a0c703d49dmsh22f075055d9c629p11c8d8jsnb7daa5c00934")
                             .build();
 
+                    CountDownLatch countDownLatch = new CountDownLatch(1);
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -166,29 +161,34 @@ public class Weather {
                                         objeto.getList().get(4).getMain().getTemp_min(),
                                         objeto.getList().get(4).getMain().getTemp_max(),
                                         objeto.getList().get(4).getDt_txt());
+                                DayForecast sixthDay = new DayForecast(objeto.getList().get(5).getMain().getTemp(),
+                                        objeto.getList().get(5).getMain().getTemp_min(),
+                                        objeto.getList().get(5).getMain().getTemp_max(),
+                                        objeto.getList().get(5).getDt_txt());
 
 
-                                forecast = new WeatherCityForecast(city.getNome(), firstDay, secondDay, thirdDay, forthDay, fifthDay);
+                                forecast = new WeatherCityForecast(city.getNome(), firstDay, secondDay, thirdDay, forthDay, fifthDay, sixthDay);
 
 
 
 
                             }
+                            countDownLatch.countDown();
 
                         }
                     });
+                    countDownLatch.await();
 
 
 
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-            }
-        });
-
         return forecast;
-
     }
+
+
+
 
     private String getNow(Calendar nowObject) {
         long agora = nowObject.getTimeInMillis();
